@@ -4,6 +4,7 @@ import { DateRangeFilter } from "@/components/DateRangeFilter";
 import { VendorWatchlist } from "@/components/VendorWatchlist";
 import { VendorComparator } from "@/components/VendorComparator";
 import { QuarterlyBriefing } from "@/components/QuarterlyBriefing";
+import { BreachesTeaser } from "@/components/BreachesTeaser";
 import { SeverityTrendChart } from "@/components/charts/SeverityTrendChart";
 import { TopVendorsChart } from "@/components/charts/TopVendorsChart";
 import { CweDistributionChart } from "@/components/charts/CweDistributionChart";
@@ -22,6 +23,10 @@ export function Dashboard() {
       <div className="mb-6 flex flex-col gap-2">
         <h1 className="text-2xl font-semibold tracking-tight">{t.dashboard.title}</h1>
         <DataFreshnessBanner />
+      </div>
+
+      <div className="mb-5">
+        <BreachesTeaser />
       </div>
 
       <div className="mb-5">

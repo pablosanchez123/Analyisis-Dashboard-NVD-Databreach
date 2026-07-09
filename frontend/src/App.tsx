@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/layout/Header";
 import { Dashboard } from "@/pages/Dashboard";
 import { Methodology } from "@/pages/Methodology";
+import { Breaches } from "@/pages/Breaches";
 import { useServerWarmup } from "@/hooks/useServerWarmup";
 import { LanguageProvider, useLanguage } from "@/i18n/LanguageContext";
 
@@ -41,13 +42,23 @@ export default function App() {
       <LanguageProvider>
         <TooltipProvider>
           <BrowserRouter>
-            <WarmupGate>
-              <Header />
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/methodology" element={<Methodology />} />
-              </Routes>
-            </WarmupGate>
+            <Routes>
+              {/* Self-contained dark experience: fetches HIBP directly, so it
+                  skips the NVD-backend warmup gate and global header. */}
+              <Route path="/breaches" element={<Breaches />} />
+              <Route
+                path="*"
+                element={
+                  <WarmupGate>
+                    <Header />
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/methodology" element={<Methodology />} />
+                    </Routes>
+                  </WarmupGate>
+                }
+              />
+            </Routes>
           </BrowserRouter>
         </TooltipProvider>
       </LanguageProvider>

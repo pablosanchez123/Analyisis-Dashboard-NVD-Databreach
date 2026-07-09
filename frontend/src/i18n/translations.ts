@@ -2,7 +2,7 @@ export type Language = "en" | "es";
 
 export interface Translations {
   header: { title: string; subtitle: string };
-  nav: { dashboard: string; methodology: string };
+  nav: { dashboard: string; methodology: string; breaches: string };
   warmup: { waking: string; wakingSub: string; gaveUp: string; gaveUpSub: string };
   dashboard: {
     title: string;
@@ -114,6 +114,46 @@ export interface Translations {
     remove: string;
     loadError: string;
   };
+  breachesTeaser: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    button: string;
+  };
+  breachesPage: {
+    navBack: string;
+    eyebrow: string;
+    heroAccountsLine: (breachCount: string) => string;
+    heroKicker: string;
+    scrollHint: string;
+    editorialPhrase: string;
+    giantsEyebrow: string;
+    giantsTitle: string;
+    accountsWord: string;
+    timelineEyebrow: string;
+    timelineTitle: string;
+    timelineSub: string;
+    breachesWord: string;
+    classesEyebrow: string;
+    classesTitle: string;
+    classesSub: string;
+    ofBreaches: string;
+    logosEyebrow: string;
+    logosTitle: string;
+    explorerEyebrow: string;
+    explorerTitle: string;
+    searchPlaceholder: string;
+    showMore: string;
+    noMatches: string;
+    sensitiveTag: string;
+    verifiedTag: string;
+    ctaTitle: string;
+    ctaBody: string;
+    ctaButton: string;
+    attribution: string;
+    loadError: string;
+    loading: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -125,6 +165,7 @@ export const translations: Record<Language, Translations> = {
     nav: {
       dashboard: "Dashboard",
       methodology: "Methodology",
+      breaches: "Data Breaches",
     },
     warmup: {
       waking: "Waking up the data server…",
@@ -283,6 +324,46 @@ export const translations: Record<Language, Translations> = {
       remove: "Remove",
       loadError: "Couldn't load the comparison.",
     },
+    breachesTeaser: {
+      eyebrow: "Also on this project",
+      title: "17.6 billion accounts have been exposed in known data breaches.",
+      body: "A separate, self-contained dashboard exploring real breach data from Have I Been Pwned — built with a completely different visual language.",
+      button: "Explore data breaches",
+    },
+    breachesPage: {
+      navBack: "CVE Dashboard",
+      eyebrow: "Data breaches · Have I Been Pwned",
+      heroAccountsLine: (breachCount: string) => `accounts exposed across ${breachCount} publicly known breaches`,
+      heroKicker: "More than twice every human alive.",
+      scrollHint: "scroll",
+      editorialPhrase: "your data was probably here",
+      giantsEyebrow: "01 — The giants",
+      giantsTitle: "Five breaches account for billions on their own.",
+      accountsWord: "accounts",
+      timelineEyebrow: "02 — Three decades",
+      timelineTitle: "It isn't slowing down.",
+      timelineSub: "Known breaches by the year they happened — not counting the ones nobody has found yet.",
+      breachesWord: "breaches",
+      classesEyebrow: "03 — What gets taken",
+      classesTitle: "Passwords are just the beginning.",
+      classesSub: "Share of known breaches that exposed each kind of data.",
+      ofBreaches: "of breaches",
+      logosEyebrow: "04 — You know these names",
+      logosTitle: "It happens to companies you use every day.",
+      explorerEyebrow: "05 — The full record",
+      explorerTitle: "Every known breach, searchable.",
+      searchPlaceholder: "Filter by name or domain…",
+      showMore: "Show more",
+      noMatches: "Nothing matches that filter.",
+      sensitiveTag: "Sensitive",
+      verifiedTag: "Verified",
+      ctaTitle: "Are you in here?",
+      ctaBody: "Check your email against every known breach — free, on Have I Been Pwned.",
+      ctaButton: "Check your email",
+      attribution: "Data: Have I Been Pwned · UI patterns: Skiper UI & Cult UI",
+      loadError: "Couldn't load breach data. Try again in a minute.",
+      loading: "Loading breach data…",
+    },
   },
   es: {
     header: {
@@ -292,6 +373,7 @@ export const translations: Record<Language, Translations> = {
     nav: {
       dashboard: "Dashboard",
       methodology: "Metodología",
+      breaches: "Filtraciones",
     },
     warmup: {
       waking: "Despertando el servidor de datos…",
@@ -449,6 +531,46 @@ export const translations: Record<Language, Translations> = {
       colCritical: "% críticos",
       remove: "Quitar",
       loadError: "No se pudo cargar la comparación.",
+    },
+    breachesTeaser: {
+      eyebrow: "También en este proyecto",
+      title: "17.600 millones de cuentas fueron expuestas en filtraciones conocidas.",
+      body: "Un dashboard aparte, autocontenido, explorando datos reales de filtraciones de Have I Been Pwned — con un lenguaje visual completamente distinto.",
+      button: "Explorar filtraciones de datos",
+    },
+    breachesPage: {
+      navBack: "Dashboard de CVEs",
+      eyebrow: "Filtraciones de datos · Have I Been Pwned",
+      heroAccountsLine: (breachCount: string) => `cuentas expuestas en ${breachCount} filtraciones conocidas`,
+      heroKicker: "Más del doble de los humanos vivos.",
+      scrollHint: "scroll",
+      editorialPhrase: "tus datos ya pasaron por acá",
+      giantsEyebrow: "01 — Los gigantes",
+      giantsTitle: "Cinco filtraciones suman miles de millones por sí solas.",
+      accountsWord: "cuentas",
+      timelineEyebrow: "02 — Tres décadas",
+      timelineTitle: "No se está frenando.",
+      timelineSub: "Filtraciones conocidas por el año en que ocurrieron — sin contar las que todavía nadie encontró.",
+      breachesWord: "filtraciones",
+      classesEyebrow: "03 — Qué se llevan",
+      classesTitle: "Las contraseñas son solo el comienzo.",
+      classesSub: "Porcentaje de filtraciones conocidas que expusieron cada tipo de dato.",
+      ofBreaches: "de las filtraciones",
+      logosEyebrow: "04 — Estos nombres los conocés",
+      logosTitle: "Le pasa a empresas que usás todos los días.",
+      explorerEyebrow: "05 — El registro completo",
+      explorerTitle: "Todas las filtraciones conocidas, buscables.",
+      searchPlaceholder: "Filtrá por nombre o dominio…",
+      showMore: "Mostrar más",
+      noMatches: "Nada coincide con ese filtro.",
+      sensitiveTag: "Sensible",
+      verifiedTag: "Verificada",
+      ctaTitle: "¿Estás acá adentro?",
+      ctaBody: "Fijate si tu email aparece en alguna filtración conocida — gratis, en Have I Been Pwned.",
+      ctaButton: "Revisá tu email",
+      attribution: "Datos: Have I Been Pwned · Patrones de UI: Skiper UI y Cult UI",
+      loadError: "No se pudieron cargar los datos. Probá de nuevo en un minuto.",
+      loading: "Cargando datos de filtraciones…",
     },
   },
 };
