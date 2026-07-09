@@ -7,7 +7,7 @@ import {
   fetchSeverityTrend,
   fetchTopVendors,
 } from "@/api/metrics";
-import { fetchBriefing } from "@/api/briefing";
+import { fetchBriefing, type QuarterSelection } from "@/api/briefing";
 import { ALL_TIME, type DateRange } from "@/types/dateRange";
 
 const STALE_TIME_MS = 5 * 60 * 1000;
@@ -45,5 +45,9 @@ export const useForecast = () =>
 
 export const useMeta = () => useQuery({ queryKey: ["meta"], queryFn: fetchMeta, staleTime: STALE_TIME_MS });
 
-export const useBriefing = () =>
-  useQuery({ queryKey: ["briefing"], queryFn: fetchBriefing, staleTime: STALE_TIME_MS });
+export const useBriefing = (selection?: QuarterSelection) =>
+  useQuery({
+    queryKey: ["briefing", selection ?? null],
+    queryFn: () => fetchBriefing(selection),
+    staleTime: STALE_TIME_MS,
+  });

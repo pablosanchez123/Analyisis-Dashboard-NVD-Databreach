@@ -302,20 +302,45 @@ def _previous_quarter_start(d: date) -> date:
     return date(d.year, d.month - 3, 1)
 
 
+def _next_quarter_start(d: date) -> date:
+    if d.month == 10:
+        return date(d.year + 1, 1, 1)
+    return date(d.year, d.month + 3, 1)
+
+
 def _quarter_label(d: date) -> str:
     return f"{d.year}-Q{(d.month - 1) // 3 + 1}"
 
 
-def quarterly_briefing(conn: sqlite3.Connection, now: datetime | None = None) -> dict:
-    """Facts for the auto-generated executive briefing — the last *complete*
-    quarter (never the in-progress one, which would read as an artificial drop).
+def quarterly_briefing(
+    conn: sqlite3.Connection,
+    now: datetime | None = None,
+    year: int | None = None,
+    quarter: int | None = None,
+) -> dict:
+    """Facts for the auto-generated executive briefing.
+
+    Defaults to the last *complete* quarter relative to `now` (never the
+    in-progress one, which would read as an artificial drop). Pass year+quarter
+    together to request a specific past quarter instead — raises ValueError for
+    an in-progress or future quarter, since there'd be nothing honest to report.
     Returns structured numbers; the frontend templates the narrative sentence
     per language so the prose itself stays in the i18n layer, not the API.
     """
     now = now or datetime.now(timezone.utc)
     current_start = _quarter_start(now.date())
-    last_complete_start = _previous_quarter_start(current_start)
-    last_complete_end = current_start - timedelta(days=1)
+
+    if year is not None and quarter is not None:
+        if not (1 <= quarter <= 4):
+            raise ValueError("quarter must be between 1 and 4")
+        target_start = date(year, (quarter - 1) * 3 + 1, 1)
+        if target_start >= current_start:
+            raise ValueError("Cannot request the in-progress or a future quarter")
+    else:
+        target_start = _previous_quarter_start(current_start)
+
+    last_complete_start = target_start
+    last_complete_end = _next_quarter_start(target_start) - timedelta(days=1)
     prev_start = _previous_quarter_start(last_complete_start)
     prev_end = last_complete_start - timedelta(days=1)
 

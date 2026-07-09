@@ -220,3 +220,30 @@ class TestQuarterlyBriefing:
         assert result["critical_cves"] == 0
         assert result["top_vendor"] is None
         assert result["top_cwe_id"] is None
+
+    def test_explicit_year_quarter_overrides_default(self, conn):
+        self._seed_briefing_data(conn)
+        # Explicitly asking for 2025-Q4 (the "previous" quarter in the default
+        # scenario) should report on 2025-Q4 itself, comparing against 2025-Q3.
+        result = queries.quarterly_briefing(conn, now=self.NOW, year=2025, quarter=4)
+        assert result["quarter"] == "2025-Q4"
+        assert result["previous_quarter"] == "2025-Q3"
+        assert result["total_cves"] == 2
+
+    def test_explicit_quarter_matches_default_when_equal_to_last_complete(self, conn):
+        self._seed_briefing_data(conn)
+        explicit = queries.quarterly_briefing(conn, now=self.NOW, year=2026, quarter=1)
+        default = queries.quarterly_briefing(conn, now=self.NOW)
+        assert explicit == default
+
+    def test_rejects_in_progress_quarter(self, conn):
+        with pytest.raises(ValueError, match="in-progress or a future quarter"):
+            queries.quarterly_briefing(conn, now=self.NOW, year=2026, quarter=2)
+
+    def test_rejects_future_quarter(self, conn):
+        with pytest.raises(ValueError, match="in-progress or a future quarter"):
+            queries.quarterly_briefing(conn, now=self.NOW, year=2027, quarter=1)
+
+    def test_rejects_invalid_quarter_number(self, conn):
+        with pytest.raises(ValueError, match="quarter must be between 1 and 4"):
+            queries.quarterly_briefing(conn, now=self.NOW, year=2025, quarter=5)

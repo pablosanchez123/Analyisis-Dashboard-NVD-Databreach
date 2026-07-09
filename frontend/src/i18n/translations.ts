@@ -91,9 +91,15 @@ export interface Translations {
       topVendorCount: string;
       topCweName: string | null;
     }) => string;
-    downloadCsv: string;
+    downloadExcel: string;
     downloadPdf: string;
     loadError: string;
+    selectQuarter: string;
+    kpiTotal: string;
+    kpiCritical: string;
+    kpiChange: string;
+    kpiNoChange: string;
+    printFooter: string;
   };
   comparator: {
     title: string;
@@ -129,15 +135,15 @@ export const translations: Record<Language, Translations> = {
     dashboard: {
       title: "Vulnerability landscape",
       severityTitle: "CVE severity trend",
-      severityDesc: "Quarterly count of published CVEs by CVSS severity",
+      severityDesc: "CVEs published each quarter, by severity",
       vendorsTitle: "Top vendors & products",
-      vendorsDesc: "Most-affected vendor/product pairs by CVE count",
+      vendorsDesc: "Which vendors show up most",
       cweTitle: "Weakness type distribution",
-      cweDesc: "Top CWE categories across all tracked CVEs",
+      cweDesc: "The most common vulnerability types",
       forecastTitle: "Critical CVE forecast",
-      forecastDesc: "Quarterly CVSS CRITICAL count, historical + Prophet forecast",
+      forecastDesc: "Critical CVEs per quarter, plus a forecast",
       patchTitle: "Patch-time approximation",
-      patchDesc: "Time from publication to last known update",
+      patchDesc: "Estimated time from publish to patch",
     },
     severity: {
       LOW: "Low",
@@ -179,35 +185,34 @@ export const translations: Record<Language, Translations> = {
     methodology: {
       title: "Methodology & data caveats",
       intro:
-        "This dashboard is built on real, messy government data. Rather than hide the rough edges, this page states every approximation up front — the same underlying caveats are returned directly by the API.",
+        "This dashboard runs on real government data, so it has real limits. Here's what every number actually means, in plain terms.",
       dataSource: {
         title: "Data source",
-        body1a: "All CVE records come from the ",
+        body1a: "Every CVE here comes from the ",
         linkText: "NVD CVE API 2.0",
-        body1b:
-          " (NIST National Vulnerability Database), backfilled from 2019-01-01 onward and refreshed on a weekly schedule via NVD's incremental (lastModified) endpoint.",
+        body1b: " (NIST), loaded from 2019 onward and updated weekly.",
       },
       cvss: {
-        title: "CVSS severity normalization",
-        body: "A CVE can carry multiple CVSS versions (v2, v3.0, v3.1, v4.0) simultaneously. This dashboard prefers v3.1 → v3.0 → v4.0 → v2, in that order, since v3.x/v4.0 scores are broadly comparable across years and only v3.x/v4.0 define a CRITICAL severity band. Any severity trend or “critical CVE” count reflects that preference order, not a re-scored consensus across versions.",
+        title: "Severity scores",
+        body: "A CVE can have several CVSS versions. We use the newest one available — v3.1, then v3.0, v4.0, then v2. \"Critical\" always means CVSS v3.x or v4.0; v2 has no Critical tier, so it's never counted as one.",
       },
       vendor: {
-        title: "Vendor / product extraction",
-        body: "NVD does not expose a clean “vendor” field. Vendor and product are parsed out of CPE 2.3 match strings attached to each CVE's affected configurations, keeping only entries NVD marks as vulnerable. Many very recently published CVEs (within the last few days) haven't yet been enriched with this configuration data by NVD analysts — the top-vendors chart under-counts the newest CVEs until NVD catches up on that backlog.",
+        title: "Vendor & product data",
+        body: "NVD doesn't have a clean \"vendor\" field — we pull it from technical CPE strings instead. Very recent CVEs may be missing this data until NVD reviews them, so brand-new vulnerabilities can look under-counted here for a few days.",
       },
       patchTime: {
-        title: "Patch-time approximation",
-        alertTitle: "Not a verified patch-release date",
-        body: "NVD has no field for “when a patch became available.” This dashboard proxies it as the gap between a CVE's publication date and its last-modified date, restricted to CVEs that carry a reference tagged Patch or Vendor Advisory. Because last_modified changes on any metadata edit — not only when a patch reference is added — this number skews high, especially for older CVEs NVD has revisited. A more rigorous version would use NVD's CVE Change History API to find the actual date a patch reference was added; that's noted here as known future work, not built into this dashboard.",
+        title: "Patch-time estimate",
+        alertTitle: "Not an exact patch date",
+        body: "NVD doesn't record \"when a patch shipped.\" We estimate it as the time between a CVE's publish date and its last update, counting only CVEs with a Patch or Vendor Advisory link. Old CVEs that got revisited later can push this number up. A more exact version would need NVD's change-history data — that's on our to-do list, not built yet.",
       },
       forecast: {
-        title: "Forecast methodology",
-        alertTitle: "Directional trend, not a precise prediction",
-        body: "The forecast is fit with Facebook Prophet on quarterly counts of CVSS v3.x/v4.0 CRITICAL-severity CVEs, recomputed as part of the ingestion pipeline (never on-demand). Published CVE volume is a function of disclosure and reporting practices as much as it is of real-world vulnerability incidence — a rising trend can mean more scrutiny, not necessarily a more dangerous software ecosystem.",
+        title: "Forecast method",
+        alertTitle: "A trend, not a promise",
+        body: "The forecast uses Prophet, trained on quarterly counts of Critical CVEs. Treat it as a direction, not an exact number — the range widens the further out it looks. Also, more reported CVEs doesn't always mean more danger; it can just mean more scrutiny.",
       },
       cwe: {
-        title: "CWE distribution",
-        body: "A CVE can carry multiple CWE (weakness type) entries; all are counted. NVD's placeholder values (NVD-CWE-noinfo, NVD-CWE-Other) are excluded from the distribution chart since they carry no real weakness-type information and would otherwise dominate the ranking.",
+        title: "Weakness types",
+        body: "A CVE can have more than one weakness type, so all are counted. NVD's placeholder tags (used when the type is unknown) are left out so they don't crowd out the real ones.",
       },
     },
     watchlist: {
@@ -255,9 +260,15 @@ export const translations: Record<Language, Translations> = {
         }
         return s;
       },
-      downloadCsv: "Download CSV",
+      downloadExcel: "Download Excel",
       downloadPdf: "Download PDF",
       loadError: "Couldn't load the quarterly briefing.",
+      selectQuarter: "Quarter",
+      kpiTotal: "Total CVEs",
+      kpiCritical: "Critical CVEs",
+      kpiChange: "vs previous quarter",
+      kpiNoChange: "No meaningful change",
+      printFooter: "NVD Vulnerability Dashboard — auto-generated report, not a substitute for full advisory review.",
     },
     comparator: {
       title: "Vendor comparison",
@@ -291,15 +302,15 @@ export const translations: Record<Language, Translations> = {
     dashboard: {
       title: "Panorama de vulnerabilidades",
       severityTitle: "Tendencia de severidad de CVEs",
-      severityDesc: "Cantidad trimestral de CVEs publicados por severidad CVSS",
+      severityDesc: "CVEs publicados por trimestre, según severidad",
       vendorsTitle: "Top vendors y productos",
-      vendorsDesc: "Pares vendor/producto más afectados por cantidad de CVEs",
+      vendorsDesc: "Qué vendors aparecen más seguido",
       cweTitle: "Distribución por tipo de vulnerabilidad",
-      cweDesc: "Principales categorías CWE entre todos los CVEs registrados",
+      cweDesc: "Los tipos de vulnerabilidad más comunes",
       forecastTitle: "Predicción de CVEs críticos",
-      forecastDesc: "Conteo trimestral de CVSS CRITICAL, histórico + predicción con Prophet",
+      forecastDesc: "CVEs críticos por trimestre, con una predicción",
       patchTitle: "Aproximación de tiempo de parcheo",
-      patchDesc: "Tiempo desde la publicación hasta la última actualización conocida",
+      patchDesc: "Tiempo estimado hasta el parche",
     },
     severity: {
       LOW: "Baja",
@@ -341,35 +352,34 @@ export const translations: Record<Language, Translations> = {
     methodology: {
       title: "Metodología y limitaciones de los datos",
       intro:
-        "Este dashboard está construido sobre datos gubernamentales reales, con todas sus imperfecciones. En vez de esconderlas, esta página expone cada aproximación — el mismo criterio metodológico que devuelve la API directamente.",
+        "Este dashboard usa datos reales del gobierno, con sus imperfecciones incluidas. Acá te explicamos, en criollo, qué significa cada número.",
       dataSource: {
         title: "Fuente de datos",
-        body1a: "Todos los registros de CVEs provienen de la ",
+        body1a: "Cada CVE sale de la ",
         linkText: "NVD CVE API 2.0",
-        body1b:
-          " (National Vulnerability Database del NIST), con una carga histórica desde el 2019-01-01 y actualizaciones semanales vía el endpoint incremental (lastModified) de NVD.",
+        body1b: " (NIST), cargada desde 2019 y actualizada cada semana.",
       },
       cvss: {
-        title: "Normalización de severidad CVSS",
-        body: "Un CVE puede tener varias versiones de CVSS a la vez (v2, v3.0, v3.1, v4.0). Este dashboard prioriza v3.1 → v3.0 → v4.0 → v2, en ese orden, ya que los puntajes v3.x/v4.0 son comparables entre años y solo v3.x/v4.0 definen una banda de severidad CRITICAL. Cualquier tendencia de severidad o conteo de “CVE crítico” refleja ese orden de preferencia, no un consenso reevaluado entre versiones.",
+        title: "Puntaje de severidad",
+        body: "Un CVE puede tener varias versiones de CVSS. Usamos la más nueva disponible: primero v3.1, después v3.0, v4.0, y v2. \"Crítico\" siempre significa CVSS v3.x o v4.0 — la v2 no tiene categoría Crítica, así que nunca cuenta como tal.",
       },
       vendor: {
-        title: "Extracción de vendor / producto",
-        body: "NVD no expone un campo limpio de “vendor”. Vendor y producto se extraen de los strings CPE 2.3 asociados a las configuraciones afectadas de cada CVE, quedándonos solo con las entradas que NVD marca como vulnerables. Muchos CVEs publicados muy recientemente (últimos días) todavía no fueron enriquecidos con estos datos de configuración por los analistas de NVD — el gráfico de top vendors subestima los CVEs más nuevos hasta que NVD se pone al día con ese backlog.",
+        title: "Datos de vendor y producto",
+        body: "NVD no tiene un campo limpio de \"vendor\" — lo sacamos de strings técnicos (CPE). Los CVEs muy recientes pueden no tener estos datos todavía porque NVD no los revisó, así que las vulnerabilidades nuevas pueden verse subrepresentadas por unos días.",
       },
       patchTime: {
-        title: "Aproximación de tiempo de parcheo",
-        alertTitle: "No es una fecha de parche verificada",
-        body: "NVD no tiene un campo para “cuándo estuvo disponible un parche”. Este dashboard lo aproxima como la diferencia entre la fecha de publicación de un CVE y su fecha de última modificación, limitado a CVEs que tienen una referencia etiquetada como Patch o Vendor Advisory. Como last_modified cambia ante cualquier edición de metadata — no solo cuando se agrega una referencia de parche — este número tiende a ser alto, especialmente en CVEs viejos que NVD revisitó. Una versión más rigurosa usaría la CVE Change History API de NVD para encontrar la fecha real en que se agregó la referencia de parche; eso queda anotado como trabajo futuro, no implementado en este dashboard.",
+        title: "Tiempo de parcheo estimado",
+        alertTitle: "No es una fecha exacta de parche",
+        body: "NVD no guarda \"cuándo salió el parche\". Lo estimamos como el tiempo entre la publicación y la última actualización, solo en CVEs con una referencia de Patch o Vendor Advisory. Los CVEs viejos que NVD revisó de nuevo después inflan este número. Una versión más precisa necesitaría el historial de cambios de NVD — queda como trabajo futuro, todavía no implementado.",
       },
       forecast: {
-        title: "Metodología de la predicción",
-        alertTitle: "Tendencia direccional, no una predicción precisa",
-        body: "La predicción se ajusta con Facebook Prophet sobre conteos trimestrales de CVEs con severidad CRITICAL en CVSS v3.x/v4.0, recalculada como parte del pipeline de ingesta (nunca on-demand). El volumen de CVEs publicados depende tanto de las prácticas de divulgación y reporte como de la incidencia real de vulnerabilidades — una tendencia creciente puede significar más escrutínio, no necesariamente un ecosistema de software más peligroso.",
+        title: "Método de predicción",
+        alertTitle: "Es una tendencia, no una promesa",
+        body: "La predicción usa Prophet, entrenado con los conteos trimestrales de CVEs críticos. Tomala como una dirección, no un número exacto — el margen se agranda cuanto más lejos mira. Además, más CVEs reportados no siempre significa más peligro; puede ser solo más atención.",
       },
       cwe: {
-        title: "Distribución de CWE",
-        body: "Un CVE puede tener varias entradas de CWE (tipo de debilidad); todas se cuentan. Los valores placeholder de NVD (NVD-CWE-noinfo, NVD-CWE-Other) se excluyen del gráfico de distribución porque no aportan información real sobre el tipo de debilidad y dominarían el ranking sin motivo.",
+        title: "Tipos de debilidad",
+        body: "Un CVE puede tener más de un tipo de debilidad, así que se cuentan todos. Los tags placeholder de NVD (cuando no se sabe el tipo) se excluyen para que no tapen a los reales.",
       },
     },
     watchlist: {
@@ -417,9 +427,15 @@ export const translations: Record<Language, Translations> = {
         }
         return s;
       },
-      downloadCsv: "Descargar CSV",
+      downloadExcel: "Descargar Excel",
       downloadPdf: "Descargar PDF",
       loadError: "No se pudo cargar el resumen trimestral.",
+      selectQuarter: "Trimestre",
+      kpiTotal: "Total de CVEs",
+      kpiCritical: "CVEs críticos",
+      kpiChange: "vs. trimestre anterior",
+      kpiNoChange: "Sin cambios significativos",
+      printFooter: "NVD Vulnerability Dashboard — reporte auto-generado, no reemplaza la revisión completa de cada advisory.",
     },
     comparator: {
       title: "Comparador de vendors",
