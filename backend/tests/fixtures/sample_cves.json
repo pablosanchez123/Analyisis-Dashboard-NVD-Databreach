@@ -1,0 +1,170 @@
+{
+  "vulnerabilities": [
+    {
+      "cve": {
+        "id": "CVE-2021-44228",
+        "sourceIdentifier": "cve@mitre.org",
+        "published": "2021-12-10T10:15:00.000",
+        "lastModified": "2023-11-07T03:41:00.000",
+        "vulnStatus": "Analyzed",
+        "descriptions": [
+          {"lang": "en", "value": "Apache Log4j2 JNDI features do not protect against attacker controlled LDAP and other JNDI related endpoints (Log4Shell)."},
+          {"lang": "es", "value": "Descripcion en espanol, no deberia ser usada"}
+        ],
+        "metrics": {
+          "cvssMetricV31": [
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "cvssData": {
+                "version": "3.1",
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+                "baseScore": 10.0,
+                "baseSeverity": "CRITICAL"
+              },
+              "exploitabilityScore": 3.9,
+              "impactScore": 6.0
+            }
+          ],
+          "cvssMetricV2": [
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "cvssData": {
+                "version": "2.0",
+                "vectorString": "AV:N/AC:M/Au:N/C:C/I:C/A:C",
+                "baseScore": 9.3
+              },
+              "baseSeverity": "HIGH"
+            }
+          ]
+        },
+        "weaknesses": [
+          {"source": "nvd@nist.gov", "type": "Primary", "description": [{"lang": "en", "value": "CWE-502"}]},
+          {"source": "nvd@nist.gov", "type": "Secondary", "description": [{"lang": "en", "value": "CWE-20"}]}
+        ],
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:apache:log4j:2.14.1:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "AAAA0000-0000-0000-0000-000000000001"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:a:apache:log4j:2.17.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "AAAA0000-0000-0000-0000-000000000002"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "references": [
+          {"url": "https://logging.apache.org/log4j/2.x/security.html", "source": "cve@mitre.org", "tags": ["Vendor Advisory"]},
+          {"url": "https://github.com/apache/logging-log4j2/pull/608", "source": "cve@mitre.org", "tags": ["Patch", "Third Party Advisory"]},
+          {"url": "https://example.com/exploit-writeup", "source": "cve@mitre.org", "tags": ["Exploit"]}
+        ]
+      }
+    },
+    {
+      "cve": {
+        "id": "CVE-2020-00001",
+        "sourceIdentifier": "cve@mitre.org",
+        "published": "2020-03-15T08:00:00.000",
+        "lastModified": "2020-03-20T08:00:00.000",
+        "vulnStatus": "Analyzed",
+        "descriptions": [
+          {"lang": "en", "value": "A legacy vulnerability with only CVSS v2 scoring available."}
+        ],
+        "metrics": {
+          "cvssMetricV2": [
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "cvssData": {
+                "version": "2.0",
+                "vectorString": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+                "baseScore": 7.5
+              },
+              "baseSeverity": "HIGH"
+            }
+          ]
+        },
+        "weaknesses": [
+          {"source": "nvd@nist.gov", "type": "Primary", "description": [{"lang": "en", "value": "NVD-CWE-noinfo"}]}
+        ],
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:acme_corp:widget\\:pro:1.0:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "BBBB0000-0000-0000-0000-000000000001"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "references": [
+          {"url": "https://example.com/advisory", "source": "cve@mitre.org", "tags": ["Third Party Advisory"]}
+        ]
+      }
+    },
+    {
+      "cve": {
+        "id": "CVE-2024-99999",
+        "sourceIdentifier": "cve@mitre.org",
+        "published": "2024-06-01T00:00:00.000",
+        "lastModified": "2024-06-02T00:00:00.000",
+        "vulnStatus": "Awaiting Analysis",
+        "descriptions": [
+          {"lang": "en", "value": "A CVE scored only under CVSS v4.0."}
+        ],
+        "metrics": {
+          "cvssMetricV40": [
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "cvssData": {
+                "version": "4.0",
+                "vectorString": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+                "baseScore": 9.8,
+                "baseSeverity": "CRITICAL"
+              }
+            }
+          ]
+        },
+        "weaknesses": [],
+        "configurations": [],
+        "references": []
+      }
+    },
+    {
+      "cve": {
+        "id": "CVE-2024-00042",
+        "sourceIdentifier": "cve@mitre.org",
+        "published": "2024-01-10T00:00:00.000",
+        "lastModified": "2024-01-11T00:00:00.000",
+        "vulnStatus": "Undergoing Analysis",
+        "descriptions": [
+          {"lang": "en", "value": "A CVE with no CVSS metrics assigned yet."}
+        ],
+        "metrics": {},
+        "weaknesses": [],
+        "configurations": [],
+        "references": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: nvd-dashboard-backend
+    env_file:
+      - .env
+    environment:
+      DATABASE_PATH: /data/nvd.sqlite
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,https://vulns.apisis.net}
+    volumes:
+      - ./data:/data
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://nvd-api.apisis.net}
+    container_name: nvd-dashboard-frontend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      - backend

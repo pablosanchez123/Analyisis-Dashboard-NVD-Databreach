@@ -1,0 +1,9 @@
+[Unit]
+Description=Run NVD dashboard incremental refresh weekly
+
+[Timer]
+OnCalendar=Mon *-*-* 04:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=NVD Vulnerability Dashboard - incremental data refresh
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/nvd-dashboard
+ExecStart=/opt/nvd-dashboard/scripts/refresh_cron.sh
