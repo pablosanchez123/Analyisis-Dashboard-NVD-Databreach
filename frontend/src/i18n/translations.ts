@@ -33,6 +33,16 @@ export interface Translations {
   };
   patchTime: { label: string; sublabel: (pct: string, sample: string, total: string) => string };
   freshness: { lastIngested: string };
+  filters: {
+    label: string;
+    allTime: string;
+    last90Days: string;
+    last12Months: string;
+    last2Years: string;
+    yearToDate: string;
+    custom: string;
+    to: string;
+  };
   methodology: {
     title: string;
     intro: string;
@@ -42,6 +52,61 @@ export interface Translations {
     patchTime: { title: string; alertTitle: string; body: string };
     forecast: { title: string; alertTitle: string; body: string };
     cwe: { title: string; body: string };
+  };
+  watchlist: {
+    title: string;
+    description: string;
+    placeholder: string;
+    minChars: string;
+    noResults: string;
+    searching: string;
+    resultCves: (count: number) => string;
+    resultCritical: (count: number) => string;
+    totalCves: string;
+    criticalPct: string;
+    trendTitle: string;
+    recentTitle: string;
+    colCve: string;
+    colDate: string;
+    colSeverity: string;
+    colCvss: string;
+    colExploit: string;
+    exploitAvailable: string;
+    notFound: string;
+    loadError: string;
+    clear: string;
+  };
+  briefing: {
+    title: string;
+    subtitle: string;
+    narrative: (facts: {
+      quarter: string;
+      totalCves: string;
+      criticalCves: string;
+      trend: "up" | "down" | "flat" | "none";
+      pct: string;
+      previousQuarter: string;
+      topVendor: string | null;
+      topProduct: string | null;
+      topVendorCount: string;
+      topCweName: string | null;
+    }) => string;
+    downloadCsv: string;
+    downloadPdf: string;
+    loadError: string;
+  };
+  comparator: {
+    title: string;
+    description: string;
+    placeholder: string;
+    addedCount: (count: number, max: number) => string;
+    alreadyAdded: string;
+    needTwo: string;
+    colVendor: string;
+    colTotal: string;
+    colCritical: string;
+    remove: string;
+    loadError: string;
   };
 }
 
@@ -101,6 +166,16 @@ export const translations: Record<Language, Translations> = {
     freshness: {
       lastIngested: "Last ingested",
     },
+    filters: {
+      label: "Date range",
+      allTime: "All time",
+      last90Days: "Last 90 days",
+      last12Months: "Last 12 months",
+      last2Years: "Last 2 years",
+      yearToDate: "Year to date",
+      custom: "Custom",
+      to: "to",
+    },
     methodology: {
       title: "Methodology & data caveats",
       intro:
@@ -134,6 +209,68 @@ export const translations: Record<Language, Translations> = {
         title: "CWE distribution",
         body: "A CVE can carry multiple CWE (weakness type) entries; all are counted. NVD's placeholder values (NVD-CWE-noinfo, NVD-CWE-Other) are excluded from the distribution chart since they carry no real weakness-type information and would otherwise dominate the ranking.",
       },
+    },
+    watchlist: {
+      title: "Vendor & product lookup",
+      description: "Search any vendor or product to see its own CVE trend, critical share, and most recent vulnerabilities — check your own stack, not just the aggregate.",
+      placeholder: "Search a vendor or product (e.g. apache log4j, microsoft windows_server_2019)…",
+      minChars: "Type at least 2 characters to search",
+      noResults: "No vendor/product matches that search",
+      searching: "Searching…",
+      resultCves: (count: number) => `${count} CVE${count === 1 ? "" : "s"}`,
+      resultCritical: (count: number) => `${count} critical`,
+      totalCves: "Total CVEs",
+      criticalPct: "% critical",
+      trendTitle: "CVE trend",
+      recentTitle: "Most recent CVEs",
+      colCve: "CVE",
+      colDate: "Published",
+      colSeverity: "Severity",
+      colCvss: "CVSS",
+      colExploit: "Exploit",
+      exploitAvailable: "Exploit available",
+      notFound: "No CVEs found for this vendor/product.",
+      loadError: "Couldn't load this vendor/product.",
+      clear: "Clear",
+    },
+    briefing: {
+      title: "Quarterly briefing",
+      subtitle: "Auto-generated from the underlying numbers — no manual writing involved",
+      narrative: (f) => {
+        const trendPhrase =
+          f.trend === "up"
+            ? `an increase of ${f.pct}%`
+            : f.trend === "down"
+              ? `a decrease of ${f.pct}%`
+              : f.trend === "flat"
+                ? "no meaningful change"
+                : null;
+        let s = `In ${f.quarter}, ${f.totalCves} CVEs were published (${f.criticalCves} of them CRITICAL)`;
+        s += trendPhrase ? `, ${trendPhrase} versus ${f.previousQuarter}.` : ".";
+        if (f.topVendor && f.topProduct) {
+          s += ` The most affected product was ${f.topVendor} / ${f.topProduct} (${f.topVendorCount} CVEs)`;
+          s += f.topCweName ? `, and the most common weakness type was ${f.topCweName}.` : ".";
+        } else if (f.topCweName) {
+          s += ` The most common weakness type was ${f.topCweName}.`;
+        }
+        return s;
+      },
+      downloadCsv: "Download CSV",
+      downloadPdf: "Download PDF",
+      loadError: "Couldn't load the quarterly briefing.",
+    },
+    comparator: {
+      title: "Vendor comparison",
+      description: "Add 2–4 vendors/products to compare their CVE trends side by side — useful for vendor risk calls.",
+      placeholder: "Search a vendor or product to add…",
+      addedCount: (count, max) => `${count} of ${max} added`,
+      alreadyAdded: "Already added",
+      needTwo: "Add at least 2 to compare",
+      colVendor: "Vendor / product",
+      colTotal: "Total CVEs",
+      colCritical: "% critical",
+      remove: "Remove",
+      loadError: "Couldn't load the comparison.",
     },
   },
   es: {
@@ -191,6 +328,16 @@ export const translations: Record<Language, Translations> = {
     freshness: {
       lastIngested: "Última ingesta",
     },
+    filters: {
+      label: "Rango de fechas",
+      allTime: "Todo el histórico",
+      last90Days: "Últimos 90 días",
+      last12Months: "Últimos 12 meses",
+      last2Years: "Últimos 2 años",
+      yearToDate: "Lo que va del año",
+      custom: "Personalizado",
+      to: "hasta",
+    },
     methodology: {
       title: "Metodología y limitaciones de los datos",
       intro:
@@ -224,6 +371,68 @@ export const translations: Record<Language, Translations> = {
         title: "Distribución de CWE",
         body: "Un CVE puede tener varias entradas de CWE (tipo de debilidad); todas se cuentan. Los valores placeholder de NVD (NVD-CWE-noinfo, NVD-CWE-Other) se excluyen del gráfico de distribución porque no aportan información real sobre el tipo de debilidad y dominarían el ranking sin motivo.",
       },
+    },
+    watchlist: {
+      title: "Búsqueda de vendor y producto",
+      description: "Buscá cualquier vendor o producto para ver su propia tendencia de CVEs, porcentaje crítico, y las vulnerabilidades más recientes — revisá tu propio stack, no solo el agregado.",
+      placeholder: "Buscá un vendor o producto (ej. apache log4j, microsoft windows_server_2019)…",
+      minChars: "Escribí al menos 2 caracteres para buscar",
+      noResults: "Ningún vendor/producto coincide con esa búsqueda",
+      searching: "Buscando…",
+      resultCves: (count: number) => `${count} CVE${count === 1 ? "" : "s"}`,
+      resultCritical: (count: number) => `${count} críticos`,
+      totalCves: "Total de CVEs",
+      criticalPct: "% críticos",
+      trendTitle: "Tendencia de CVEs",
+      recentTitle: "CVEs más recientes",
+      colCve: "CVE",
+      colDate: "Publicado",
+      colSeverity: "Severidad",
+      colCvss: "CVSS",
+      colExploit: "Exploit",
+      exploitAvailable: "Exploit disponible",
+      notFound: "No se encontraron CVEs para este vendor/producto.",
+      loadError: "No se pudo cargar este vendor/producto.",
+      clear: "Limpiar",
+    },
+    briefing: {
+      title: "Resumen ejecutivo trimestral",
+      subtitle: "Generado automáticamente a partir de los números — sin redacción manual",
+      narrative: (f) => {
+        const trendPhrase =
+          f.trend === "up"
+            ? `un aumento del ${f.pct}%`
+            : f.trend === "down"
+              ? `una baja del ${f.pct}%`
+              : f.trend === "flat"
+                ? "sin cambios significativos"
+                : null;
+        let s = `En ${f.quarter} se publicaron ${f.totalCves} CVEs (${f.criticalCves} de severidad CRITICAL)`;
+        s += trendPhrase ? `, ${trendPhrase} respecto a ${f.previousQuarter}.` : ".";
+        if (f.topVendor && f.topProduct) {
+          s += ` El producto más afectado fue ${f.topVendor} / ${f.topProduct} (${f.topVendorCount} CVEs)`;
+          s += f.topCweName ? `, y el tipo de debilidad más común fue ${f.topCweName}.` : ".";
+        } else if (f.topCweName) {
+          s += ` El tipo de debilidad más común fue ${f.topCweName}.`;
+        }
+        return s;
+      },
+      downloadCsv: "Descargar CSV",
+      downloadPdf: "Descargar PDF",
+      loadError: "No se pudo cargar el resumen trimestral.",
+    },
+    comparator: {
+      title: "Comparador de vendors",
+      description: "Agregá entre 2 y 4 vendors/productos para comparar su tendencia de CVEs lado a lado — útil para decisiones de riesgo de proveedores.",
+      placeholder: "Buscá un vendor o producto para agregar…",
+      addedCount: (count, max) => `${count} de ${max} agregados`,
+      alreadyAdded: "Ya agregado",
+      needTwo: "Agregá al menos 2 para comparar",
+      colVendor: "Vendor / producto",
+      colTotal: "Total de CVEs",
+      colCritical: "% críticos",
+      remove: "Quitar",
+      loadError: "No se pudo cargar la comparación.",
     },
   },
 };

@@ -2,10 +2,11 @@ import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, 
 import { useTopVendors } from "@/hooks/useMetric";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { ALL_TIME, type DateRange } from "@/types/dateRange";
 import { axisTickStyle, gridColor, tooltipContentStyle, tooltipItemStyle, tooltipLabelStyle } from "./chart-theme";
 
-export function TopVendorsChart() {
-  const { data, isLoading, error } = useTopVendors();
+export function TopVendorsChart({ dateRange = ALL_TIME }: { dateRange?: DateRange }) {
+  const { data, isLoading, error } = useTopVendors(dateRange);
   const { t } = useLanguage();
 
   if (isLoading) return <Skeleton className="h-80 w-full" />;

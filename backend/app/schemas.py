@@ -63,3 +63,55 @@ class MetaResponse(BaseModel):
     date_range_end: str | None
     last_ingested_lastmodified: str | None
     backfill_completed_at: str | None
+
+
+class VendorSearchEntry(BaseModel):
+    vendor: str
+    product: str
+    cve_count: int
+    critical_count: int
+
+
+class VendorSearchResponse(BaseModel):
+    data: list[VendorSearchEntry]
+
+
+class VendorTrendPoint(BaseModel):
+    period: str
+    cve_count: int
+
+
+class VendorRecentCve(BaseModel):
+    cve_id: str
+    published_date: str
+    cvss_severity: str | None
+    cvss_score: float | None
+    description: str
+    has_exploit_reference: bool
+
+
+class VendorDetailResponse(BaseModel):
+    vendor: str
+    product: str
+    total_cves: int
+    critical_count: int
+    critical_pct: float
+    trend: list[VendorTrendPoint]
+    recent_cves: list[VendorRecentCve]
+
+
+class VendorCompareResponse(BaseModel):
+    data: list[VendorDetailResponse]
+
+
+class BriefingResponse(BaseModel):
+    quarter: str
+    previous_quarter: str
+    total_cves: int
+    critical_cves: int
+    pct_change_vs_previous: float | None
+    top_vendor: str | None
+    top_product: str | None
+    top_vendor_cve_count: int
+    top_cwe_id: str | None
+    top_cwe_name: str | None

@@ -5,5 +5,5 @@ Requires=docker.service
 
 [Service]
 Type=oneshot
-WorkingDirectory=/opt/nvd-dashboard
-ExecStart=/opt/nvd-dashboard/scripts/refresh_cron.sh
+WorkingDirectory=/home/pablo/nvd-dashboard
+ExecStart=/home/pablo/nvd-dashboard/scripts/refresh_cron.sh

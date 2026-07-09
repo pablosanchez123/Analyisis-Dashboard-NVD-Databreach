@@ -2,12 +2,13 @@ import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, X
 import { useSeverityTrend } from "@/hooks/useMetric";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { ALL_TIME, type DateRange } from "@/types/dateRange";
 import { axisTickStyle, gridColor, SEVERITY_COLORS, tooltipContentStyle, tooltipItemStyle, tooltipLabelStyle } from "./chart-theme";
 
 const SEVERITY_KEYS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
 
-export function SeverityTrendChart() {
-  const { data, isLoading, error } = useSeverityTrend();
+export function SeverityTrendChart({ dateRange = ALL_TIME }: { dateRange?: DateRange }) {
+  const { data, isLoading, error } = useSeverityTrend(dateRange);
   const { t } = useLanguage();
 
   if (isLoading) return <Skeleton className="h-80 w-full" />;

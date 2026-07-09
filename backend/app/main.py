@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import cwe, forecast, meta, patch_time, severity, vendors
+from app.routers import briefing, cwe, forecast, meta, patch_time, severity, vendor_search, vendors
 
 app = FastAPI(title="NVD Vulnerability Dashboard API")
 
@@ -19,6 +19,8 @@ app.include_router(patch_time.router)
 app.include_router(cwe.router)
 app.include_router(forecast.router)
 app.include_router(meta.router)
+app.include_router(vendor_search.router)
+app.include_router(briefing.router)
 
 
 @app.get("/healthz")

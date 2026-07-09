@@ -3,9 +3,10 @@ import { StatTile } from "@/components/layout/StatTile";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/format";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { ALL_TIME, type DateRange } from "@/types/dateRange";
 
-export function PatchTimeCard() {
-  const { data, isLoading, error } = usePatchTime();
+export function PatchTimeCard({ dateRange = ALL_TIME }: { dateRange?: DateRange }) {
+  const { data, isLoading, error } = usePatchTime(dateRange);
   const { t, language } = useLanguage();
 
   if (isLoading) return <Skeleton className="h-40 w-full" />;

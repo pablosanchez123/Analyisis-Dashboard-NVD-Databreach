@@ -183,3 +183,25 @@ body {
     @apply font-sans;
   }
 }
+
+/* "Download PDF" on the quarterly briefing triggers window.print() — this
+   scopes the printed page to just that card via the browser's own print
+   pipeline, no PDF-generation dependency needed. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-briefing,
+  #print-briefing * {
+    visibility: visible;
+  }
+  #print-briefing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  #print-briefing .no-print {
+    display: none;
+  }
+}
